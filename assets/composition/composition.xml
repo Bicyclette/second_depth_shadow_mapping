@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Object>
+	<Mesh name="ground" solid="1">
+	</Mesh>
+	<Mesh name="shield" solid="1">
+	</Mesh>
+	<Mesh name="basketball" solid="1">
+	</Mesh>
+	<Mesh name="pillar" solid="1">
+	</Mesh>
+</Object>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Object>
+	<Mesh name="bark" solid="1">
+	</Mesh>
+	<Mesh name="leaves" solid="0">
+	</Mesh>
+	<Mesh name="ground" solid="0">
+	</Mesh>
+</Object>
