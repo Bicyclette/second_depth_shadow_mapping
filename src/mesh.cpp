@@ -83,7 +83,7 @@ void Mesh::bindVAO() const
 	glBindVertexArray(vao);
 }
 
-void Mesh::draw(Shader& s, bool instancing, int amount, bool shadowPass, DRAWING_MODE mode)
+void Mesh::draw(Shader& s, bool instancing, int amount, bool shadowPass, DRAWING_MODE mode, bool lance_williams)
 {
 	// bind vao
 	glBindVertexArray(vao);
@@ -180,14 +180,22 @@ void Mesh::draw(Shader& s, bool instancing, int amount, bool shadowPass, DRAWING
 
 	if(shadowPass)
 	{
-		if(solid)
+		if(lance_williams)
 		{
 			glEnable(GL_CULL_FACE);
-			glCullFace(GL_FRONT);
+			glCullFace(GL_BACK);
 		}
 		else
 		{
-			glDisable(GL_CULL_FACE);
+			if(solid)
+			{
+				glEnable(GL_CULL_FACE);
+				glCullFace(GL_FRONT);
+			}
+			else
+			{
+				glDisable(GL_CULL_FACE);
+			}
 		}
 	}
 	else

@@ -17,6 +17,7 @@ in vec2 texCoords;
 
 uniform Material material;
 uniform sampler2D depthMap;
+uniform int show_depth;
 
 out vec4 color;
 
@@ -61,12 +62,20 @@ void main()
 		vec2(offset, -offset),	// bottom right
 	};
 
-	// get quad color
-	color = texture(material.diffuse, texCoords);
+	if(show_depth == 1)
+	{
+		float depth = texture(material.diffuse, texCoords).r;
+		color = vec4(vec3(depth), 1.0);
+	}
+	else
+	{
+		// get quad color
+		color = texture(material.diffuse, texCoords);
 
-	// reinhard tone mapping
-	vec3 mapped = color.rgb / (color.rgb + vec3(1.0));
+		// reinhard tone mapping
+		vec3 mapped = color.rgb / (color.rgb + vec3(1.0));
 
-	// gamma correction
-	color = gammaCorrection(vec4(mapped, 1.0));
+		// gamma correction
+		color = gammaCorrection(vec4(mapped, 1.0));
+	}
 }

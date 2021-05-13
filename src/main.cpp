@@ -10,6 +10,7 @@ void render(std::unique_ptr<WindowManager> client, std::unique_ptr<App> app)
 {
 	ImGuiIO & io = ImGui::GetIO();
 	int scene{0};
+	int show_shadowMap{0};
 	
 	int shadow_method{static_cast<int>(app->getGraphics()->getShadowMethod())};
 	//int resolution{static_cast<int>(app->getGraphics()->getShadowQuality())};
@@ -19,9 +20,9 @@ void render(std::unique_ptr<WindowManager> client, std::unique_ptr<App> app)
 	float domain{app->getGraphics()->getOrthoDimension()};
 	glm::vec3 dPos{app->getScenes().at(0)->getDLights().at(0)->getPosition()};
 	glm::vec3 dDir{app->getScenes().at(0)->getDLights().at(0)->getDirection()};
-	float cutoff{glm::degrees(app->getScenes().at(1)->getSLights().at(0)->getCutOff())};
-	glm::vec3 sPos{app->getScenes().at(1)->getSLights().at(0)->getPosition()};
-	glm::vec3 sDir{app->getScenes().at(1)->getSLights().at(0)->getDirection()};
+	float cutoff{glm::degrees(app->getScenes().at(2)->getSLights().at(0)->getCutOff())};
+	glm::vec3 sPos{app->getScenes().at(2)->getSLights().at(0)->getPosition()};
+	glm::vec3 sDir{app->getScenes().at(2)->getSLights().at(0)->getDirection()};
 
 	// delta
 	double currentFrame{0.0f};
@@ -59,7 +60,7 @@ void render(std::unique_ptr<WindowManager> client, std::unique_ptr<App> app)
 		ImGui::End();
 		
 		ImGui::SetNextWindowPos(ImVec2(0, 250));
-		if(scene == 0 || (scene == 1 && shadow_method == 0))
+		if(scene != 2 || shadow_method == 0)
 		{
 			ImGui::Begin("Bias");
 			ImGui::SetWindowSize(ImVec2(350, 60));
@@ -77,7 +78,7 @@ void render(std::unique_ptr<WindowManager> client, std::unique_ptr<App> app)
 		ImGui::End();
 		
 		ImGui::SetNextWindowPos(ImVec2(0, 360));
-		if(scene == 0)
+		if(scene == 0 || scene == 1)
 		{
 			ImGui::Begin("Directional light");
 			ImGui::SetWindowSize(ImVec2(350, 210));
@@ -90,7 +91,7 @@ void render(std::unique_ptr<WindowManager> client, std::unique_ptr<App> app)
 			ImGui::InputFloat("direction Z", &dDir.z, 0.1f);
 			ImGui::End();
 		}
-		else if(scene == 1)
+		else if(scene == 2)
 		{
 			ImGui::Begin("Spot light");
 			ImGui::SetWindowSize(ImVec2(350, 210));
@@ -107,9 +108,17 @@ void render(std::unique_ptr<WindowManager> client, std::unique_ptr<App> app)
 		
 		ImGui::SetNextWindowPos(ImVec2(0, 570));
 		ImGui::Begin("Scene");
-		ImGui::SetWindowSize(ImVec2(350, 80));
+		ImGui::SetWindowSize(ImVec2(350, 120));
 		ImGui::RadioButton("tree", &scene, 0);
-		ImGui::RadioButton("composition", &scene, 1);
+		ImGui::RadioButton("cthulhu", &scene, 1);
+		ImGui::RadioButton("composition", &scene, 2);
+		ImGui::End();
+
+		ImGui::SetNextWindowPos(ImVec2(0, 690));
+		ImGui::Begin("ShadowMap");
+		ImGui::SetWindowSize(ImVec2(350, 80));
+		ImGui::RadioButton("hide", &show_shadowMap, 0);
+		ImGui::RadioButton("show", &show_shadowMap, 1);
 		ImGui::End();
 		// <<<<<<<<<<IMGUI
 
@@ -154,19 +163,22 @@ void render(std::unique_ptr<WindowManager> client, std::unique_ptr<App> app)
 
 		app->getGraphics()->setBias(bias);
 
-		if(scene == 0)
+		if(scene == 0 || scene == 1)
 		{
 			app->getGraphics()->setOrthoDimension(domain);
 			app->getScenes().at(scene)->getDLights().at(0)->setPosition(dPos);
 			app->getScenes().at(scene)->getDLights().at(0)->setDirection(dDir);
 		}
-		else if(scene == 1)
+		else if(scene == 2)
 		{
 			app->getScenes().at(scene)->getSLights().at(0)->setCutOff(cutoff);
 			app->getScenes().at(scene)->getSLights().at(0)->setOuterCutOff(cutoff + 5.0f);
 			app->getScenes().at(scene)->getSLights().at(0)->setPosition(glm::vec3(sPos));
 			app->getScenes().at(scene)->getSLights().at(0)->setDirection(sDir);
 		}
+
+		// shadow map visibility toggle
+		app->getGraphics()->setShowDepthMap(show_shadowMap);
 	}
 
 }

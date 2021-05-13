@@ -50,7 +50,7 @@ Object::~Object()
 	}
 }
 
-void Object::draw(Shader& shader, bool shadowPass, DRAWING_MODE mode)
+void Object::draw(Shader& shader, bool shadowPass, DRAWING_MODE mode, bool lance_williams)
 {
 	shader.use();
 	shader.setMatrix("model", model);
@@ -60,7 +60,7 @@ void Object::draw(Shader& shader, bool shadowPass, DRAWING_MODE mode)
 
 	for(int i{0}; i < meshCount; ++i)
 	{
-		meshes.at(i)->draw(shader, instancing, instanceModel.size(), shadowPass, mode);
+		meshes.at(i)->draw(shader, instancing, instanceModel.size(), shadowPass, mode, lance_williams);
 	}
 }
 

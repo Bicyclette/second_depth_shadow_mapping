@@ -51,7 +51,7 @@ class Mesh
 		Material & getMaterial();
 		bool isSolid();
 		void bindVAO() const;
-		void draw(Shader& s, bool instancing = false, int amount = 1, bool shadowPass = false, DRAWING_MODE mode = DRAWING_MODE::SOLID);
+		void draw(Shader& s, bool instancing = false, int amount = 1, bool shadowPass = false, DRAWING_MODE mode = DRAWING_MODE::SOLID, bool lance_williams = false);
 
 	private:
 

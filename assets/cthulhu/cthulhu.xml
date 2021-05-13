@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<Object>
+	<Mesh name="eye_g" solid="1">
+	</Mesh>
+	<Mesh name="eye_d" solid="1">
+	</Mesh>
+	<Mesh name="cthulhu" solid="1">
+	</Mesh>
+	<Mesh name="ground" solid="0">
+	</Mesh>
+</Object>

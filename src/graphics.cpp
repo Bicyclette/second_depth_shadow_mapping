@@ -18,6 +18,7 @@ Graphics::Graphics(int width, int height) :
 	shadowQuality(SHADOW_QUALITY::ULTRA),
 	shadowMethod(SHADOW_METHOD::SECOND_DEPTH),
 	bias(0.0005f),
+	show_depth_map(0),
 	orthoDimension(10.0f),
 	orthoProjection(glm::ortho(-orthoDimension, orthoDimension, -orthoDimension, orthoDimension, 0.1f, 100.0f)),
 	blinnPhong("../shaders/blinn_phong/vertex.glsl", "../shaders/blinn_phong/fragment.glsl", SHADER_TYPE::BLINN_PHONG),
@@ -89,6 +90,16 @@ void Graphics::setBias(float b)
 float Graphics::getBias()
 {
 	return bias;
+}
+
+void Graphics::setShowDepthMap(int v)
+{
+	show_depth_map = v;
+}
+
+int Graphics::getShowDepthMap()
+{
+	return show_depth_map;
 }
 
 glm::mat4 & Graphics::getOrthoProjection()

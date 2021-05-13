@@ -27,7 +27,7 @@ class Scene
 		std::vector<std::shared_ptr<Camera>> & getCameras();
 		std::shared_ptr<Camera> & getActiveCamera();
 		std::string & getName();
-		void draw(Shader & shader, std::unique_ptr<Graphics> & graphics, bool shadowPass = false, DRAWING_MODE mode = DRAWING_MODE::SOLID, bool debug = false);
+		void draw(Shader & shader, std::unique_ptr<Graphics> & graphics, bool shadowPass = false, DRAWING_MODE mode = DRAWING_MODE::SOLID, bool debug = false, bool lance_williams = false);
 		std::vector<std::shared_ptr<DirectionalLight>> & getDLights();
 		std::vector<std::shared_ptr<SpotLight>> & getSLights();
 		bool getMixed();

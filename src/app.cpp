@@ -7,7 +7,7 @@ App::App(int clientWidth, int clientHeight) :
 	// window aspect ratio
 	float aspectRatio = static_cast<float>(clientWidth) / static_cast<float>(clientHeight);	
 	
-	// create scene with solids and surfaces
+	// create scene first with solids and surfaces
 	scenes.push_back(std::make_shared<Scene>("tree"));
 	scenes.at(scenes.size()-1)->addCamera(aspectRatio, glm::vec3(0.0f, 3.0f, 4.0f), glm::vec3(0.0f), glm::normalize(glm::vec3(0.0f, 4.0f, -3.0f)), 45.0f, 0.1f, 100.0f );
 	scenes.at(scenes.size()-1)->setActiveCamera(0);
@@ -15,6 +15,17 @@ App::App(int clientWidth, int clientHeight) :
 	scenes.at(scenes.size()-1)->addDirectionalLight(glm::vec3(-6.0f, 10.0f, 2.0f), glm::vec3(0.025f), glm::vec3(5.0f), glm::vec3(1.0f), glm::vec3(0.5f, -1.5f, -0.25f));
 	
 	scenes.at(scenes.size()-1)->addObject("../assets/tree/tree.glb", glm::mat4(1.0f));
+	
+	scenes.at(scenes.size()-1)->setGridAxis(8);
+	
+	// create second scene with solids and surfaces
+	scenes.push_back(std::make_shared<Scene>("cthulhu"));
+	scenes.at(scenes.size()-1)->addCamera(aspectRatio, glm::vec3(0.0f, 3.0f, 4.0f), glm::vec3(0.0f), glm::normalize(glm::vec3(0.0f, 4.0f, -3.0f)), 45.0f, 0.1f, 100.0f );
+	scenes.at(scenes.size()-1)->setActiveCamera(0);
+
+	scenes.at(scenes.size()-1)->addDirectionalLight(glm::vec3(6.2f, 12.0f, -7.5f), glm::vec3(0.025f), glm::vec3(5.0f), glm::vec3(1.0f), glm::vec3(0.75f, -2.5f, -0.25f));
+	
+	scenes.at(scenes.size()-1)->addObject("../assets/cthulhu/cthulhu.glb", glm::mat4(1.0f));
 	
 	scenes.at(scenes.size()-1)->setGridAxis(8);
 	
@@ -59,6 +70,21 @@ void App::drawScene(float& delta, int index, int width, int height, DRAWING_MODE
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 			// draw post processing quad
+			if(graphics->getShowDepthMap() == 1)
+			{
+				graphics->getPostProcessingShader().use();
+				graphics->getPostProcessingShader().setInt("show_depth", 1);
+				graphics->getQuadMesh()->getMaterial().textures.clear();
+				graphics->getQuadMesh()->getMaterial().textures.push_back(Texture(graphics->getStdDepthFBO(0)->getAttachments().at(0).id, TEXTURE_TYPE::DIFFUSE, "."));
+			}
+			else
+			{
+				graphics->getPostProcessingShader().use();
+				graphics->getPostProcessingShader().setInt("show_depth", 0);
+				graphics->getQuadMesh()->getMaterial().textures.clear();
+				graphics->getQuadMesh()->getMaterial().textures.push_back(Texture(graphics->getNormalFBO()->getAttachments().at(0).id, TEXTURE_TYPE::DIFFUSE, "."));
+
+			}
 			graphics->getQuadMesh()->draw(graphics->getPostProcessingShader());
 		}
 		else
@@ -77,7 +103,10 @@ void App::drawScene(float& delta, int index, int width, int height, DRAWING_MODE
 			s.setMatrix("view", scenes.at(index)->getActiveCamera()->getViewMatrix());
 			s.setMatrix("proj", scenes.at(index)->getActiveCamera()->getProjectionMatrix());
 			s.setLighting(scenes.at(index)->getDLights(), scenes.at(index)->getSLights());
-			scenes.at(index)->draw(s, graphics, false, mode, debug);
+			if(graphics->getShadowMethod() == SHADOW_METHOD::LANCE_WILLIAMS)
+				scenes.at(index)->draw(s, graphics, false, mode, debug, true);
+			else
+				scenes.at(index)->draw(s, graphics, false, mode, debug);
 
 			// blit to normal framebuffer (resolve multisampling)
 			graphics->getNormalFBO()->bind();
@@ -88,6 +117,21 @@ void App::drawScene(float& delta, int index, int width, int height, DRAWING_MODE
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 			// draw post processing quad
+			if(graphics->getShowDepthMap() == 1)
+			{
+				graphics->getPostProcessingShader().use();
+				graphics->getPostProcessingShader().setInt("show_depth", 1);
+				graphics->getQuadMesh()->getMaterial().textures.clear();
+				graphics->getQuadMesh()->getMaterial().textures.push_back(Texture(graphics->getStdDepthFBO(0)->getAttachments().at(0).id, TEXTURE_TYPE::DIFFUSE, "."));
+			}
+			else
+			{
+				graphics->getPostProcessingShader().use();
+				graphics->getPostProcessingShader().setInt("show_depth", 0);
+				graphics->getQuadMesh()->getMaterial().textures.clear();
+				graphics->getQuadMesh()->getMaterial().textures.push_back(Texture(graphics->getNormalFBO()->getAttachments().at(0).id, TEXTURE_TYPE::DIFFUSE, "."));
+
+			}
 			graphics->getQuadMesh()->draw(graphics->getPostProcessingShader());
 		}
 	}
@@ -174,7 +218,10 @@ void App::directionalShadowPass(int index, DRAWING_MODE mode)
 		graphics->getShadowMappingShader().setMatrix("view", lightView);
 
 		// draw scene
-		scenes.at(index)->draw(graphics->getShadowMappingShader(), graphics, true, mode);
+		if(graphics->getShadowMethod() == SHADOW_METHOD::LANCE_WILLIAMS)
+			scenes.at(index)->draw(graphics->getShadowMappingShader(), graphics, true, mode, false, true);
+		else
+			scenes.at(index)->draw(graphics->getShadowMappingShader(), graphics, true, mode);
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

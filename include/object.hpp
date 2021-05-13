@@ -25,7 +25,7 @@ class Object
 
 		Object(const std::string & path, glm::mat4 model = glm::mat4(1.0f));
 		~Object();
-		void draw(Shader& shader, bool shadowPass = false, DRAWING_MODE mode = DRAWING_MODE::SOLID);
+		void draw(Shader& shader, bool shadowPass = false, DRAWING_MODE mode = DRAWING_MODE::SOLID, bool lance_williams = false);
         std::vector<std::shared_ptr<Mesh>>& getMeshes();
 		void setInstancing(const std::vector<glm::mat4> & models);
 		void resetInstancing();

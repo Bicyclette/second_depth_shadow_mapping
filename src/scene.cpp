@@ -77,7 +77,7 @@ std::string & Scene::getName()
 	return name;
 }
 
-void Scene::draw(Shader & shader, std::unique_ptr<Graphics> & graphics, bool shadowPass, DRAWING_MODE mode, bool debug)
+void Scene::draw(Shader & shader, std::unique_ptr<Graphics> & graphics, bool shadowPass, DRAWING_MODE mode, bool debug, bool lance_williams)
 {
 	shader.use();
 	shader.setFloat("bias", graphics->getBias());
@@ -102,10 +102,10 @@ void Scene::draw(Shader & shader, std::unique_ptr<Graphics> & graphics, bool sha
 			sLights.at(i)->draw();
 		}
 	}
-	
+
 	for(int i{0}; i < objects.size(); ++i)
 	{
-		objects.at(i)->draw(shader, shadowPass, mode);
+		objects.at(i)->draw(shader, shadowPass, mode, lance_williams);
 	}
 }
 

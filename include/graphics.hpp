@@ -39,6 +39,8 @@ class Graphics
 		SHADOW_METHOD getShadowMethod();
 		void setBias(float b);
 		float getBias();
+		void setShowDepthMap(int v);
+		int getShowDepthMap();
 		void setLightView(glm::mat4 view);
 		glm::mat4 & getLightView();
 		glm::mat4 & getOrthoProjection();
@@ -65,6 +67,7 @@ class Graphics
 		SHADOW_QUALITY shadowQuality;
 		SHADOW_METHOD shadowMethod;
 		float bias;
+		int show_depth_map;
 		glm::mat4 orthoProjection; // for directional lights
 
 		Shader blinnPhong;
