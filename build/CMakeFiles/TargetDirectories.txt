@@ -1,3 +1,0 @@
-/home/mathias/M1_IMA/IG3D/second_depth_shadow_mapping/build/CMakeFiles/rebuild_cache.dir
-/home/mathias/M1_IMA/IG3D/second_depth_shadow_mapping/build/CMakeFiles/edit_cache.dir
-/home/mathias/M1_IMA/IG3D/second_depth_shadow_mapping/build/CMakeFiles/SecondDepthShadowMapping.dir
