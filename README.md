@@ -1,22 +1,28 @@
 # SECOND\_DEPTH\_SHADOW\_MAPPING
-Master project for the CG3D lesson. <br/>
-C++ implementation of the research paper made by Yulan WANG and Steven MOLNAR.
+Master project for the IG3D lesson held at the Sorbonne University. <br/>
+This is a C++ implementation of the second depth shadow mapping technique introduced by Yulan WANG and Steven MOLNAR.
+... [link_to_research_paper](http://www.cs.unc.edu/techreports/94-019.pdf) ...
+<br/>
+This shadow mapping method allows the programmer to stop relying on a bias parameter to avoid self shadowing.
 
-# install dependencies (ubuntu)
-Must be performed as root:
-+ apt-get install libsdl2-dev
-+ apt-get install libglew-dev
-+ apt-get install libassimp-dev
-+ apt-get install libomp-dev
+### Dependencies
 
-# how to build (GNU/linux systems)
-1) in the root directory, create a build directory: mkdir build
-2) then run the **generate\_makefile.py** script
-3) checkout to build directory: cd build
-4) compile: make
-5) run: ./SecondDepthShadowMapping
+- [Conan](https://conan.io/)
+- [Cmake](https://cmake.org/)
 
-# how to use
+## Build
+
+```
+conan install . -s build_type=Release --build missing --install-folder=build
+cmake -B build -S .
+```
+## Viewport navigation
 - middle mouse button to look around
 - SHIFT + middle mouse button to pan the view
 - scroll to zoom in or out
+
+## Screen capture
+<br/>
+![tree 1](docs/tree1.png)
+<br/>
+![tree 2](docs/tree1.png)

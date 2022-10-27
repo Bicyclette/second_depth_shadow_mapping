@@ -2,7 +2,22 @@ cmake_minimum_required(VERSION 3.16)
 
 project(SecondDepthShadowMapping)
 
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules ${CMAKE_MODULE_PATH})
+cmake_policy(SET CMP0072 NEW)
 set(CMAKE_BUILD_TYPE Release)
+
+if(EXISTS ${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+	set(CONAN_DISABLE_CHECK_COMPILER TRUE)
+	include(${CMAKE_BINARY_DIR}/conanbuildinfo.cmake)
+	conan_basic_setup()
+else()
+	message(WARNING "The file conanbuildinfo.cmake doesn't exist, you have to run conan install first")
+endif()
+
+include_directories(include)
 
 set(SRCS
 	src/stb_image.cpp
@@ -47,29 +62,7 @@ set(HEADERS
 	include/imgui_impl_sdl.h
 	include/imgui_impl_opengl3.h)
 
-set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
-
-include_directories(${PROJECT_SOURCE_DIR}/include)
-
 add_executable(${PROJECT_NAME} ${SRCS} ${HEADERS})
-
-cmake_policy(SET CMP0072 NEW)
-
-find_package(SDL2 REQUIRED)
-if(SDL2_FOUND)
-	target_include_directories(${PROJECT_NAME} PUBLIC ${SDL2_INCLUDE_DIR})
-	target_link_libraries(${PROJECT_NAME} ${SDL2_LIBRARY})
-else()
-	message(FATAL_ERROR "sdl2 not found")
-endif()
-
-find_package(GLEW REQUIRED)
-if(GLEW_FOUND)
-    target_include_directories(${PROJECT_NAME} PUBLIC ${GLEW_INCLUDE_DIRS})
-    target_link_libraries(${PROJECT_NAME} ${GLEW_LIBRARIES})
-else()
-	message(FATAL_ERROR "glew not found")
-endif()
 
 find_package(OpenGL REQUIRED)
 if(OPENGL_FOUND)
@@ -87,10 +80,10 @@ else()
 	message(FATAL_ERROR "OpenMP not found")
 endif()
 
-find_package(ASSIMP REQUIRED)
-if(ASSIMP_FOUND)
-	target_include_directories(${PROJECT_NAME} PUBLIC ${ASSIMP_INCLUDE_DIRS})
-	target_link_libraries(${PROJECT_NAME} ${ASSIMP_LIBRARIES})
-else()
-	message(FATAL_ERROR "Assimp not found")
-endif()
+target_link_libraries(${PROJECT_NAME} ${CONAN_LIBS})
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/shaders DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
+
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/shaders DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin)
+file(COPY ${CMAKE_CURRENT_SOURCE_DIR}/assets DESTINATION ${CMAKE_CURRENT_BINARY_DIR}/bin)

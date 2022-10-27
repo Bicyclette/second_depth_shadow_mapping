@@ -1,0 +1,17 @@
+[requires]
+assimp/5.2.2
+bullet3/3.24
+glew/2.2.0
+libsndfile/1.0.31
+openal/1.21.1
+sdl/2.0.20
+
+[options]
+
+[imports]
+#bin, *.dll -> ./src/bin
+#lib, *.dylib* -> ./src/bin
+#lib, *.so* -> ./src/bin
+
+[generators]
+cmake
